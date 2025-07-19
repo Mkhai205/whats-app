@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { geistMono, geistSans } from "./fonts";
+import ConvexClientProvider from "@/providers/convex-client-provider";
 
 export const metadata: Metadata = {
     title: "Whats App",
@@ -22,7 +23,7 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {children}
+                    <ConvexClientProvider>{children}</ConvexClientProvider>
                 </ThemeProvider>
             </body>
         </html>
