@@ -1,8 +1,9 @@
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { MessageSeenSvg } from "@/lib/svgs";
 import { ImageIcon, Users, VideoIcon } from "lucide-react";
 import { ConversationWithDetails, UserType } from "@/lib/type";
+import { useConversationStore } from "@/store/chat-store";
 
 export default function Conversation({
     conversation,
@@ -11,14 +12,22 @@ export default function Conversation({
     conversation: ConversationWithDetails;
     me: UserType | undefined;
 }) {
+    const { selectedConversation, setSelectedConversation } = useConversationStore();
     const conversationImage = conversation.groupImage || conversation.image;
     const conversationName = conversation.groupName || conversation.name;
     const lastMessage = conversation.lastMessage;
     const lastMessageType = lastMessage?.messageType;
 
+    const activeBgClass = selectedConversation?._id === conversation._id;
+
     return (
         <>
-            <div className={`flex gap-2 items-center p-3 hover:bg-chat-hover cursor-pointer `}>
+            <div
+                className={cn("flex gap-2 items-center p-3 hover:bg-chat-hover cursor-pointer", {
+                    "bg-gray-tertiary": activeBgClass,
+                })}
+                onClick={() => setSelectedConversation(conversation)}
+            >
                 <Avatar className="border border-gray-900 overflow-visible relative">
                     {conversation.isOnline && (
                         <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-foreground" />

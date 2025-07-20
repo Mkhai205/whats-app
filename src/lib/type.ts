@@ -14,3 +14,11 @@ export type ConversationWithDetails = ConversationType & {
     tokenIdentifier?: string;
     isOnline?: boolean;
 };
+
+export interface IMessage {
+    _id: string;
+    content: string;
+    _creationTime: number;
+    messageType: "text" | "image" | "video";
+    sender: UserType;
+}
