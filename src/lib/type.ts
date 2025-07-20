@@ -1,20 +1,16 @@
-export type lassMessageType = {
-    _id: string;
-    messageType: string;
-    content: string;
-    sender: string;
-    _creationTime: number;
-};
+import { Doc } from "../../convex/_generated/dataModel";
 
-export type conversationsType = {
-    _id: string;
-    admin: string | null;
-    isGroup: boolean;
-    groupImage: string | null;
-    groupName: string | null;
-    participants: string[];
-    _creationTime: number;
-    lastMessage: lassMessageType | null;
-    sender: string;
-    isOnline: boolean;
+export type UserType = Doc<"users">;
+
+export type MessageType = Doc<"messages">;
+
+export type ConversationType = Doc<"conversations">;
+
+export type ConversationWithDetails = ConversationType & {
+    lastMessage: MessageType | null;
+    name?: string;
+    email?: string;
+    image?: string;
+    tokenIdentifier?: string;
+    isOnline?: boolean;
 };

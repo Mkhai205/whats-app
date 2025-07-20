@@ -2,14 +2,19 @@ import { formatDate } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { MessageSeenSvg } from "@/lib/svgs";
 import { ImageIcon, Users, VideoIcon } from "lucide-react";
-import { conversationsType } from "@/lib/type";
+import { ConversationWithDetails, UserType } from "@/lib/type";
 
-export default function Conversation({ conversation }: { conversation: conversationsType }) {
-    const conversationImage = conversation.groupImage;
-    const conversationName = conversation.groupName || "Private Chat";
+export default function Conversation({
+    conversation,
+    me,
+}: {
+    conversation: ConversationWithDetails;
+    me: UserType | undefined;
+}) {
+    const conversationImage = conversation.groupImage || conversation.image;
+    const conversationName = conversation.groupName || conversation.name;
     const lastMessage = conversation.lastMessage;
     const lastMessageType = lastMessage?.messageType;
-    const authUser = { _id: "user1" };
 
     return (
         <>
@@ -34,7 +39,7 @@ export default function Conversation({ conversation }: { conversation: conversat
                         </span>
                     </div>
                     <p className="text-[12px] mt-1 text-gray-500 flex items-center gap-1 ">
-                        {lastMessage?.sender === authUser?._id ? <MessageSeenSvg /> : ""}
+                        {lastMessage?.sender === me?._id ? <MessageSeenSvg /> : ""}
                         {conversation.isGroup && <Users size={16} />}
                         {!lastMessage && "Say Hi!"}
                         {lastMessageType === "text" && (
