@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { geistMono, geistSans } from "./fonts";
 import ConvexClientProvider from "@/providers/convex-client-provider";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
     title: "Whats App",
@@ -23,7 +24,10 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <ConvexClientProvider>{children}</ConvexClientProvider>
+                    <ConvexClientProvider>
+                        {children}
+                        <Toaster />
+                    </ConvexClientProvider>
                 </ThemeProvider>
             </body>
         </html>

@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { internalMutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 
 export const createUser = internalMutation({
     args: {
@@ -71,7 +71,7 @@ export const setUserOffline = internalMutation({
 
 export const getUsers = query({
     args: {},
-    handler: async (ctx, args) => {
+    handler: async (ctx) => {
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) {
             throw new ConvexError("Unauthorized");
@@ -84,8 +84,9 @@ export const getUsers = query({
 
 export const getMe = query({
     args: {},
-    handler: async (ctx, args) => {
+    handler: async (ctx) => {
         const identity = await ctx.auth.getUserIdentity();
+
         if (!identity) {
             throw new ConvexError("Unauthorized");
         }
@@ -102,6 +103,39 @@ export const getMe = query({
         }
 
         return user;
+    },
+});
+
+export const createUserIfNotExists = mutation({
+    args: {},
+    handler: async (ctx) => {
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new ConvexError("Unauthorized");
+        }
+
+        const existingUser = await ctx.db
+            .query("users")
+            .withIndex("by_tokenIdentifier", (q) =>
+                q.eq("tokenIdentifier", identity.tokenIdentifier)
+            )
+            .unique();
+
+        if (existingUser) {
+            return existingUser;
+        }
+
+        // Create user if they don't exist
+        const newUser = await ctx.db.insert("users", {
+            tokenIdentifier: identity.tokenIdentifier,
+            email: identity.email ?? "",
+            name: identity.name ?? "Anonymous User",
+            image: identity.pictureUrl ?? "",
+            isOnline: true,
+        });
+
+        return await ctx.db.get(newUser);
     },
 });
 
