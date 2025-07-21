@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { IMessage } from "./type";
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -53,6 +54,15 @@ export function formatDate(date_ms: number) {
     );
 }
 
+export const getTime = (timestamp: number): string => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    });
+};
+
 export const isSameDay = (timestamp1: number, timestamp2: number): boolean => {
     const date1 = new Date(timestamp1);
     const date2 = new Date(timestamp2);
@@ -63,36 +73,33 @@ export const isSameDay = (timestamp1: number, timestamp2: number): boolean => {
     );
 };
 
-// Define getRelativeDateTime function
-// export const getRelativeDateTime = (message: any, previousMessage: any) => {
-// 	const today = new Date();
-// 	const yesterday = new Date(today);
-// 	yesterday.setDate(yesterday.getDate() - 1);
-// 	const lastWeek = new Date(today);
-// 	lastWeek.setDate(lastWeek.getDate() - 7);
+export const getRelativeDateTime = (message: IMessage, previousMessage: IMessage | undefined) => {
+    const today = new Date();
+    const yesterday = new Date(today.getDate() - 1);
+    const lastWeek = new Date(today.getDate() - 7);
 
-// 	const messageDate = new Date(message._creationTime);
+    const messageDate = new Date(message._creationTime);
 
-// 	if (!previousMessage || !isSameDay(previousMessage._creationTime, messageDate.getTime())) {
-// 		if (isSameDay(messageDate.getTime(), today.getTime())) {
-// 			return "Today";
-// 		} else if (isSameDay(messageDate.getTime(), yesterday.getTime())) {
-// 			return "Yesterday";
-// 		} else if (messageDate.getTime() > lastWeek.getTime()) {
-// 			const options: Intl.DateTimeFormatOptions = {
-// 				weekday: "long",
-// 			};
-// 			return messageDate.toLocaleDateString(undefined, options);
-// 		} else {
-// 			const options: Intl.DateTimeFormatOptions = {
-// 				day: "2-digit",
-// 				month: "2-digit",
-// 				year: "numeric",
-// 			};
-// 			return messageDate.toLocaleDateString(undefined, options);
-// 		}
-// 	}
-// };
+    if (!previousMessage) {
+        if (isSameDay(messageDate.getTime(), today.getTime())) {
+            return "Today";
+        } else if (isSameDay(messageDate.getTime(), yesterday.getTime())) {
+            return "Yesterday";
+        } else if (messageDate.getTime() > lastWeek.getTime()) {
+            const options: Intl.DateTimeFormatOptions = {
+                weekday: "long",
+            };
+            return messageDate.toLocaleDateString(undefined, options);
+        } else {
+            const options: Intl.DateTimeFormatOptions = {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+            };
+            return messageDate.toLocaleDateString(undefined, options);
+        }
+    }
+};
 
 export function randomID(len: number) {
     let result = "";

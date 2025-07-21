@@ -34,7 +34,7 @@ export default function Conversation({
                     )}
                     <AvatarImage
                         src={conversationImage || "/placeholder.png"}
-                        className="object-cover rounded-full"
+                        className="object-cover"
                     />
                     <AvatarFallback>
                         <div className="animate-pulse bg-gray-tertiary w-full h-full rounded-full"></div>

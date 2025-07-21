@@ -34,6 +34,8 @@ export default function MessageInput() {
         } catch (error) {
             toast.error("Failed to send message");
             console.error("Error sending message:", error);
+        } finally {
+            setMsgText("");
         }
     };
     return (

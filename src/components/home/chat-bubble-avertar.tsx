@@ -1,0 +1,27 @@
+import { IMessage } from "@/lib/type";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+
+type ChatBubbleAvatarProps = {
+    message: IMessage;
+    isMember: boolean;
+    isGroup?: boolean;
+};
+
+export default function ChatBubbleAvatar({ message, isMember, isGroup }: ChatBubbleAvatarProps) {
+    if (!isGroup) return null;
+
+    return (
+        <Avatar className="overflow-visible relative">
+            {message.sender.isOnline && isMember && (
+                <div className="absolute top-0 right-1 w-2 h-2 bg-green-500 rounded-full border-2 border-foreground" />
+            )}
+            <AvatarImage
+                src={message.sender?.image}
+                className="rounded-full object-cover w-9 h-9"
+            />
+            <AvatarFallback className="w-9 h-9 ">
+                <div className="animate-pulse bg-gray-tertiary rounded-full"></div>
+            </AvatarFallback>
+        </Avatar>
+    );
+}
