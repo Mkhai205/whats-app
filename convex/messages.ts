@@ -46,6 +46,92 @@ export const sendTextMessage = mutation({
     },
 });
 
+export const sendImage = mutation({
+    args: { imgId: v.id("_storage"), conversation: v.id("conversations"), sender: v.id("users") },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new ConvexError("Not authenticated");
+        }
+
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_tokenIdentifier", (q) =>
+                q.eq("tokenIdentifier", identity.tokenIdentifier)
+            )
+            .unique();
+
+        if (!user) {
+            throw new ConvexError("User not found");
+        }
+
+        const conversation = await ctx.db
+            .query("conversations")
+            .filter((q) => q.eq(q.field("_id"), args.conversation))
+            .first();
+
+        if (!conversation) {
+            throw new ConvexError("Conversation not found");
+        }
+
+        if (!conversation.participants.includes(user._id)) {
+            throw new ConvexError("You are not part of this conversation");
+        }
+
+        const imgUrl = (await ctx.storage.getUrl(args.imgId)) as string;
+
+        await ctx.db.insert("messages", {
+            content: imgUrl,
+            conversation: args.conversation,
+            sender: args.sender,
+            messageType: "image",
+        });
+    },
+});
+
+export const sendVideo = mutation({
+    args: { videoId: v.id("_storage"), conversation: v.id("conversations"), sender: v.id("users") },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new ConvexError("Not authenticated");
+        }
+
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_tokenIdentifier", (q) =>
+                q.eq("tokenIdentifier", identity.tokenIdentifier)
+            )
+            .unique();
+
+        if (!user) {
+            throw new ConvexError("User not found");
+        }
+
+        const conversation = await ctx.db
+            .query("conversations")
+            .filter((q) => q.eq(q.field("_id"), args.conversation))
+            .first();
+
+        if (!conversation) {
+            throw new ConvexError("Conversation not found");
+        }
+
+        if (!conversation.participants.includes(user._id)) {
+            throw new ConvexError("You are not part of this conversation");
+        }
+
+        const videoUrl = (await ctx.storage.getUrl(args.videoId)) as string;
+
+        await ctx.db.insert("messages", {
+            content: videoUrl,
+            conversation: args.conversation,
+            sender: args.sender,
+            messageType: "video",
+        });
+    },
+});
+
 export const getMessages = query({
     args: {
         conversation: v.id("conversations"),

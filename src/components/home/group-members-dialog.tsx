@@ -44,7 +44,7 @@ export default function GroupMembersDialog({
                                             )}
                                             <AvatarImage
                                                 src={member.image}
-                                                className="object-cover"
+                                                className="object-cover rounded-full w-10 h-10"
                                             />
                                             <AvatarFallback>
                                                 <div className="animate-pulse bg-gray-tertiary w-full h-full rounded-full"></div>

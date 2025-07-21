@@ -12,7 +12,7 @@ export default function MessageContainer() {
 
     return (
         <div className="relative p-4 flex-1 overflow-auto h-full bg-chat-tile-light dark:bg-chat-tile-dark">
-            <div className="mx-2 flex flex-col gap-3 h-full">
+            <div className="mx-1 mb-1 flex flex-col gap-3">
                 {messages?.map((message, index) => (
                     <ChatBubble
                         key={message._id}

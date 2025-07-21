@@ -19,8 +19,10 @@ import { Id } from "../../../convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import toast from "react-hot-toast";
+import { useConversationStore } from "@/store/chat-store";
 
 const UserListDialog = () => {
+    const { setSelectedConversation } = useConversationStore();
     const [selectedUsers, setSelectedUsers] = useState<Id<"users">[]>([]);
     const [groupName, setGroupName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -66,6 +68,21 @@ const UserListDialog = () => {
                     admin: me?._id as Id<"users">,
                 });
             }
+
+            const conversationName = isGroup
+                ? groupName
+                : users?.find((user) => user._id === selectedUsers[0])?.name;
+
+            setSelectedConversation({
+                _id: conversationId,
+                _creationTime: Date.now(),
+                participants: selectedUsers,
+                isGroup,
+                groupImage: renderedImage,
+                groupName: conversationName,
+                admin: me?._id,
+                lastMessage: null,
+            });
 
             dialogCloseRef.current?.click();
         } catch (error) {
@@ -149,10 +166,13 @@ const UserListDialog = () => {
                         >
                             <Avatar className="overflow-visible">
                                 {user.isOnline && (
-                                    <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-foreground" />
+                                    <div className="absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full border-2 border-foreground" />
                                 )}
 
-                                <AvatarImage src={user.image} className="object-cover" />
+                                <AvatarImage
+                                    src={user.image}
+                                    className="object-cover rounded-full w-10 h-10"
+                                />
                                 <AvatarFallback>
                                     <div className="animate-pulse bg-gray-tertiary w-full h-full rounded-full"></div>
                                 </AvatarFallback>

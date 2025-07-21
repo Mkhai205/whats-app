@@ -1,6 +1,6 @@
 "use client";
 
-import { Laugh, Mic, Plus, Send } from "lucide-react";
+import { Laugh, Mic, Send } from "lucide-react";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { Button } from "../ui/button";
@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import EmojiPiker, { Theme } from "emoji-picker-react";
 import useComponentVisible from "@/hooks/useComponentVisible";
 import { useTheme } from "next-themes";
+import MediaDropdown from "./media-dropdown";
 
 export default function MessageInput() {
     const { theme, systemTheme } = useTheme();
@@ -52,8 +53,8 @@ export default function MessageInput() {
                             theme={currentTheme === "dark" ? Theme.DARK : Theme.LIGHT}
                             style={{
                                 position: "absolute",
-                                bottom: "1.5rem",
-                                left: "1rem",
+                                bottom: "2rem",
+                                left: "-0.5rem",
                                 zIndex: 50,
                             }}
                             onEmojiClick={(emoji) => {
@@ -63,7 +64,7 @@ export default function MessageInput() {
                     )}
                     <Laugh className="text-gray-600 dark:text-gray-400" />
                 </div>
-                <Plus className="text-gray-600 dark:text-gray-400" />
+                <MediaDropdown />
             </div>
             <form className="w-full flex gap-3" onSubmit={handleSendMessage}>
                 <div className="flex-1">
