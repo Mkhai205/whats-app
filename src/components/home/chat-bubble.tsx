@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useCallback, useState } from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import ChatAvatarAction from "./chat-avatar-action";
 
 type ChatBubbleProps = {
     previousMessage: IMessage | undefined;
@@ -48,6 +49,7 @@ export default function ChatBubble({ previousMessage, message, me }: ChatBubbleP
                 <div className="flex gap-1 w-3/5">
                     <ChatBubbleAvatar message={message} isMember={isMember} isGroup={isGroup} />
                     <div className="flex flex-col justify-end gap-1">
+                        {isGroup && <ChatAvatarAction message={message} me={me} />}
                         <div
                             className={`relative flex flex-col min-w-24 max-w-fit rounded-md shadow-md z-20 ${bgClass}`}
                         >

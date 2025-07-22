@@ -11,7 +11,7 @@ export default function ChatBubbleAvatar({ message, isMember, isGroup }: ChatBub
     if (!isGroup) return null;
 
     return (
-        <Avatar className="overflow-visible relative">
+        <Avatar className="mt-1.5 overflow-visible relative">
             {message.sender.isOnline && isMember && (
                 <div className="absolute top-0 right-1 w-2 h-2 bg-green-500 rounded-full border-2 border-foreground" />
             )}
