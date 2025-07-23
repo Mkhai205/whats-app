@@ -25,7 +25,7 @@ export default function ChatBubble({ previousMessage, message, me }: ChatBubbleP
     const isGroup = !!selectedConversation?.isGroup;
     const isMember = !!selectedConversation?.participants.includes(message.sender?._id);
     const fromMe = message.sender?._id === me?._id;
-    const fromAI = message.sender?.name === "ChatGPT";
+    const fromAI = message.sender?.name === "KAKA" || message.sender?.name === "KAKA_I";
     const bgClass = fromAI
         ? "bg-blue-500 text-white"
         : fromMe
@@ -62,7 +62,7 @@ export default function ChatBubble({ previousMessage, message, me }: ChatBubbleP
                     <div className="flex flex-col justify-end gap-1">
                         {isGroup && <ChatAvatarAction message={message} me={me} fromAI={fromAI} />}
                         <div
-                            className={`relative flex flex-col min-w-24 max-w-fit rounded-md shadow-md z-20 ${bgClass}`}
+                            className={`relative flex flex-col gap-1 min-w-24 max-w-fit rounded-md shadow-md z-20 ${bgClass}`}
                         >
                             {renderMessageContent()}
                             {fromAI && (

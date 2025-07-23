@@ -13,17 +13,15 @@ export default function MessageContainer() {
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
     useEffect(() => {
-        scrollToBottom();
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 300);
     }, [messages]);
 
     return (
-        <div className="relative p-4 flex-1 overflow-auto h-full bg-chat-tile-light dark:bg-chat-tile-dark">
-            <div className="mx-1 mb-1 flex flex-col gap-3">
+        <div className="relative px-4 flex-1 overflow-auto h-full bg-chat-tile-light dark:bg-chat-tile-dark">
+            <div className="flex flex-col gap-3 mb-3">
                 {messages?.map((message, index) => (
                     <ChatBubble
                         key={message._id}
@@ -32,8 +30,8 @@ export default function MessageContainer() {
                         me={me}
                     />
                 ))}
-                <div ref={messagesEndRef} />
             </div>
+            <div ref={messagesEndRef} />
         </div>
     );
 }

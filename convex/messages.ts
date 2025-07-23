@@ -45,9 +45,15 @@ export const sendTextMessage = mutation({
             messageType: "text",
         });
 
-        if (args.content.startsWith("@gpt")) {
+        if (args.content.startsWith("@kaka-img")) {
             // Schedule the chat action to run immediately
-            await ctx.scheduler.runAfter(100, api.openai.chat, {
+            await ctx.scheduler.runAfter(100, api.chatbot.image, {
+                messageBody: args.content,
+                conversation: args.conversation,
+            });
+        } else if (args.content.startsWith("@kaka")) {
+            // Schedule the chat action to run immediately
+            await ctx.scheduler.runAfter(100, api.chatbot.chat, {
                 messageBody: args.content,
                 conversation: args.conversation,
             });
@@ -55,7 +61,7 @@ export const sendTextMessage = mutation({
     },
 });
 
-export const sendChatGPTMessage = mutation({
+export const sendKakaMessage = mutation({
     args: {
         content: v.string(),
         conversation: v.id("conversations"),
@@ -64,8 +70,23 @@ export const sendChatGPTMessage = mutation({
         await ctx.db.insert("messages", {
             content: args.content,
             conversation: args.conversation,
-            sender: "ChatGPT",
+            sender: "KAKA",
             messageType: "text",
+        });
+    },
+});
+
+export const sendKakaIMessage = mutation({
+    args: {
+        content: v.string(),
+        conversation: v.id("conversations"),
+    },
+    handler: async (ctx, args) => {
+        await ctx.db.insert("messages", {
+            content: args.content,
+            conversation: args.conversation,
+            sender: "KAKA_I",
+            messageType: "image",
         });
     },
 });
@@ -188,10 +209,15 @@ export const getMessages = query({
 
         const messagesWithSender = await Promise.all(
             messages.map(async (message) => {
-                if (message.sender === "ChatGPT") {
+                if (message.sender === "KAKA") {
                     return {
                         ...message,
-                        sender: { name: "ChatGPT", image: "/gpt.png" },
+                        sender: { name: "KAKA", image: "/gpt.png" },
+                    };
+                } else if (message.sender === "KAKA_I") {
+                    return {
+                        ...message,
+                        sender: { name: "KAKA_I", image: "/dall-e.png" },
                     };
                 }
                 let sender;
