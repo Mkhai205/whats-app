@@ -5,10 +5,16 @@ type ChatBubbleAvatarProps = {
     message: IMessage;
     isMember: boolean;
     isGroup?: boolean;
+    fromAI?: boolean;
 };
 
-export default function ChatBubbleAvatar({ message, isMember, isGroup }: ChatBubbleAvatarProps) {
-    if (!isGroup) return null;
+export default function ChatBubbleAvatar({
+    message,
+    isMember,
+    isGroup,
+    fromAI,
+}: ChatBubbleAvatarProps) {
+    if (!isGroup && !fromAI) return null;
 
     return (
         <Avatar className="mt-1.5 overflow-visible relative">

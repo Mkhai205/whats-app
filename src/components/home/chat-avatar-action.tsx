@@ -8,15 +8,15 @@ import { api } from "../../../convex/_generated/api";
 type ChatAvatarActionProps = {
     message: IMessage;
     me: UserType | undefined;
+    fromAI?: boolean;
 };
 
-export default function ChatAvatarAction({ message, me }: ChatAvatarActionProps) {
+export default function ChatAvatarAction({ message, me, fromAI }: ChatAvatarActionProps) {
     const { selectedConversation, setSelectedConversation } = useConversationStore();
 
     const isMember = !!selectedConversation?.participants.includes(message.sender._id);
     const isGroup = !!selectedConversation?.isGroup;
     const isAdmin = selectedConversation?.admin === me?._id;
-    const fromAI = message.sender?.name === "ChatGPT";
     const removeUserFromConversation = useMutation(api.conversations.removeUserFromConversation);
     const addUserToConversation = useMutation(api.conversations.addUserToConversation);
 

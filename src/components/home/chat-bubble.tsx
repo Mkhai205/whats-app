@@ -12,6 +12,7 @@ import { useCallback, useState } from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import ChatAvatarAction from "./chat-avatar-action";
+import { Bot } from "lucide-react";
 
 type ChatBubbleProps = {
     previousMessage: IMessage | undefined;
@@ -22,9 +23,14 @@ type ChatBubbleProps = {
 export default function ChatBubble({ previousMessage, message, me }: ChatBubbleProps) {
     const { selectedConversation } = useConversationStore();
     const isGroup = !!selectedConversation?.isGroup;
-    const isMember = !!selectedConversation?.participants.includes(message.sender._id);
-    const fromMe = message.sender._id === me?._id;
-    const bgClass = fromMe ? "bg-green-chat" : "bg-white dark:bg-gray-primary";
+    const isMember = !!selectedConversation?.participants.includes(message.sender?._id);
+    const fromMe = message.sender?._id === me?._id;
+    const fromAI = message.sender?.name === "ChatGPT";
+    const bgClass = fromAI
+        ? "bg-blue-500 text-white"
+        : fromMe
+          ? "bg-green-chat"
+          : "bg-white dark:bg-gray-primary";
     const time = getTime(message._creationTime);
 
     const [open, setOpen] = useState(false);
@@ -47,13 +53,23 @@ export default function ChatBubble({ previousMessage, message, me }: ChatBubbleP
             <>
                 <DateIndicator message={message} previousMessage={previousMessage} />
                 <div className="flex gap-1 w-3/5">
-                    <ChatBubbleAvatar message={message} isMember={isMember} isGroup={isGroup} />
+                    <ChatBubbleAvatar
+                        message={message}
+                        isMember={isMember}
+                        isGroup={isGroup}
+                        fromAI={fromAI}
+                    />
                     <div className="flex flex-col justify-end gap-1">
-                        {isGroup && <ChatAvatarAction message={message} me={me} />}
+                        {isGroup && <ChatAvatarAction message={message} me={me} fromAI={fromAI} />}
                         <div
                             className={`relative flex flex-col min-w-24 max-w-fit rounded-md shadow-md z-20 ${bgClass}`}
                         >
                             {renderMessageContent()}
+                            {fromAI && (
+                                <div className="px-2 pb-1">
+                                    <Bot size={16} />
+                                </div>
+                            )}
                         </div>
                         <MessageTime time={time} fromMe={fromMe} />
                     </div>
